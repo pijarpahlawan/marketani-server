@@ -1,14 +1,14 @@
 {
-  "name": "server",
-  "version": "1.0.0",
-  "description": "",
+  "name": "marketani-server",
+  "version": "0.1.0",
+  "description": "Server side for marketani website",
   "main": "app.js",
   "scripts": {
     "lint": "eslint app --ext js --report-unused-disable-directives --max-warnings 0",
     "dev": "nodemon app/app.js",
     "start": "NODE_ENV=production node app/app.js"
   },
-  "author": "",
+  "author": "Team 3 21IF08",
   "license": "ISC",
   "devDependencies": {
     "eslint": "^8.39.0",
@@ -26,5 +26,13 @@
     "express": "^4.18.2",
     "mysql2": "^3.2.3",
     "sequelize": "^6.31.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pijarpahlawan/marketani-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pijarpahlawan/marketani-server/issues"
+  },
+  "homepage": "https://github.com/pijarpahlawan/marketani-server#readme"
 }
