@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
   User.init(
     {
       userId: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
         field: 'user_id'
@@ -59,13 +60,18 @@ module.exports = (sequelize, DataTypes) => {
         field: 'address'
       },
       gender: {
-        type: DataTypes.ENUM,
+        type: DataTypes.STRING(1),
         allowNull: true,
-        value: ['L', 'P'],
-        field: 'gender'
+        field: 'gender',
+        validate: {
+          isIn: {
+            args: [['L', 'P']],
+            msg: "Gender must be 'L' or 'P'"
+          }
+        }
       },
       accountId: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
         allowNull: false,
         field: 'account_id'
       }
