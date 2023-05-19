@@ -2,7 +2,7 @@ const axios = require('axios')
 const { rajaongkirAPIKEY } = require('../../config/thirdParty')
 
 const province = (req, res) => {
-  axios
+  return axios
     .get('https://api.rajaongkir.com/starter/city', {
       params: {
         province: req.params.provinceId,

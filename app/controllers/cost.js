@@ -2,7 +2,7 @@ const axios = require('axios')
 const { rajaongkirAPIKEY } = require('../../config/thirdParty')
 
 const cost = (req, res) => {
-  axios
+  return axios
     .post('https://api.rajaongkir.com/starter/cost', req.body, {
       headers: {
         key: rajaongkirAPIKEY

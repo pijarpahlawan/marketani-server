@@ -1,8 +1,8 @@
 const axios = require('axios')
 const { rajaongkirAPIKEY } = require('../../config/thirdParty')
 
-const province = (req, res) => {
-  axios
+const province = async (req, res) => {
+  return axios
     .get('https://api.rajaongkir.com/starter/province', {
       params: { id: req.params.provinceId },
       headers: { key: rajaongkirAPIKEY }

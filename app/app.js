@@ -22,7 +22,7 @@ app.use(
 )
 
 app.get('/', (req, res) => {
-  res.status(302).redirect('/')
+  res.status(302).redirect(`/${apiVersion}`)
 })
 
 app.listen(port, host, () => {
