@@ -8,7 +8,8 @@ const { apiVersion, host, port, originAllowed } = require('../config/network')
 const app = express()
 
 const corsOptions = {
-  origin: originAllowed
+  origin: originAllowed,
+  optionSuccessStatus: 200
 }
 
 // middleware

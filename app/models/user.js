@@ -46,12 +46,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       provinceId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         field: 'province_id'
       },
       cityId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         field: 'city_id'
       },
       address: {
