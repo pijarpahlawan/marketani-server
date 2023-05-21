@@ -9,14 +9,14 @@ const jsonwebtoken = require('jsonwebtoken')
 const accountModel = require('../models/account')
 const { development: dev } = require('../../config/database')
 
-const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
-  host: dev.host,
-  dialect: dev.dialect
-})
-
-const Account = accountModel(sequelize, DataTypes)
-
 const login = async (req, res) => {
+  const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
+    host: dev.host,
+    dialect: dev.dialect
+  })
+
+  const Account = accountModel(sequelize, DataTypes)
+
   const { email, password } = req.body
 
   try {
@@ -48,18 +48,28 @@ const login = async (req, res) => {
       algorithm: 'HS256'
     })
 
+    res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000
+    })
+
     return res.status(200).json({ token })
   } catch (error) {
-    console.error(error.message)
+    res.end()
 
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: error.message })
-    } else {
-      return res.status(500).json({ message: error.message })
-    }
+    error.statusCode = error instanceof ValidationError ? 400 : 500
+
+    console.error(error)
+
+    throw error
+    // if (error instanceof ValidationError) {
+    //   return res.status(400).json({ message: error.message })
+    // } else {
+    //   return res.status(500).json({ message: error.message })
+    // }
+  } finally {
+    sequelize.close()
   }
 }
-
-sequelize.close()
 
 module.exports = login

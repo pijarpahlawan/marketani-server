@@ -10,10 +10,16 @@ const cost = (req, res) => {
     })
     .then((response) => {
       const parsedData = response.data
+
+      if (parsedData.rajaongkir.status.code !== 200) {
+        const error = {
+          statusCode: parsedData.rajaongkir.status.code,
+          message: parsedData.rajaongkir.status.description
+        }
+        throw new Error(error)
+      }
+
       res.status(200).json({ body: parsedData.rajaongkir.results })
-    })
-    .catch((error) => {
-      res.status(400).json({ body: error.message })
     })
 }
 

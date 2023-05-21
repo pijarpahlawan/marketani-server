@@ -10,22 +10,21 @@ const accountModel = require('../models/account')
 const userModel = require('../models/user')
 const { development: dev } = require('../../config/database')
 
-const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
-  host: dev.host,
-  dialect: dev.dialect
-})
-
-const Account = accountModel(sequelize, DataTypes)
-const User = userModel(sequelize, DataTypes)
-
 const register = async (req, res) => {
-  const { email, password, username, provinceId, cityId } = req.body
+  const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
+    host: dev.host,
+    dialect: dev.dialect
+  })
 
-  const saltRounds = 10
-  const salt = await bcrypt.genSalt(saltRounds)
-  const encryptedPassword = await bcrypt.hash(password, salt)
+  const Account = accountModel(sequelize, DataTypes)
+  const User = userModel(sequelize, DataTypes)
+
+  const { email, password, username } = req.body
 
   try {
+    const saltRounds = 10
+    const salt = await bcrypt.genSalt(saltRounds)
+    const encryptedPassword = await bcrypt.hash(password, salt)
     const newUserAccount = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
@@ -42,8 +41,8 @@ const register = async (req, res) => {
             username,
             name: null,
             phone: null,
-            provinceId,
-            cityId,
+            provinceId: null,
+            cityId: null,
             address: null,
             gender: null,
             accountId: newAccount.accountId
@@ -59,18 +58,29 @@ const register = async (req, res) => {
       expiresIn: '30d',
       algorithm: 'HS256'
     })
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000
+    })
+
     return res.status(201).json({ token })
   } catch (error) {
-    console.error(error.message)
+    res.end()
 
-    if (error instanceof ValidationError) {
-      return res.status(400).json({ message: error.message })
-    } else {
-      return res.status(500).json({ message: error.message })
-    }
+    error.statusCode = error instanceof ValidationError ? 400 : 500
+
+    console.error({ statusode: error.statusCode, message: error.message })
+
+    // throw error
+    // if (error instanceof ValidationError) {
+    //   return res.status(400).json({ message: error.message })
+    // } else {
+    //   return res.status(500).json({ message: error.message })
+    // }
+  } finally {
+    sequelize.close()
   }
 }
-
-sequelize.close()
 
 module.exports = register
