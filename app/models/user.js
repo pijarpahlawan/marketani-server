@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      User.belongsTo(models.Account)
+      this.Account = User.belongsTo(models.Account)
     }
   }
   User.init(
@@ -17,63 +17,47 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        primaryKey: true,
-        field: 'user_id'
+        primaryKey: true
       },
       avatarUrl: {
         type: DataTypes.STRING,
-        allowNull: true,
-        field: 'avatar_url'
+        allowNull: true
       },
       username: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(30),
         allowNull: false,
         unique: {
           name: 'username',
           msg: 'Username already exists'
-        },
-        field: 'username'
+        }
       },
       name: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        field: 'name'
+        type: DataTypes.STRING(30),
+        allowNull: true
       },
       phone: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        field: 'phone'
+        type: DataTypes.STRING(15),
+        allowNull: true
       },
       provinceId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        field: 'province_id'
+        allowNull: true
       },
       cityId: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        field: 'city_id'
+        allowNull: true
       },
       address: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        field: 'address'
+        type: DataTypes.STRING(100),
+        allowNull: true
       },
       gender: {
         type: DataTypes.STRING(1),
-        allowNull: true,
-        field: 'gender',
-        validate: {
-          isIn: {
-            args: [['L', 'P']],
-            msg: "Gender must be 'L' or 'P'"
-          }
-        }
+        allowNull: true
       },
       accountId: {
         type: DataTypes.UUID,
-        allowNull: false,
-        field: 'account_id'
+        allowNull: false
       }
     },
     {

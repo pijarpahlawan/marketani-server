@@ -8,7 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      Account.hasOne(models.User)
+      this.User = Account.hasOne(models.User, {
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        foreignKey: {
+          name: 'accountId',
+          type: DataTypes.UUID,
+          allowNull: false
+        }
+      })
     }
   }
   Account.init(
@@ -17,27 +25,19 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        primaryKey: true,
-        field: 'account_id'
+        primaryKey: true
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'email',
         unique: {
           name: 'email',
           msg: 'Email already exists'
-        },
-        validate: {
-          isEmail: {
-            msg: 'Please enter a valid email address'
-          }
         }
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
-        field: 'password'
+        allowNull: false
       }
     },
     {
