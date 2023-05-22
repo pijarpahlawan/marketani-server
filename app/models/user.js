@@ -8,7 +8,15 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate (models) {
-      this.Account = User.belongsTo(models.Account)
+      this.Account = User.belongsTo(models.Account, {
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+        foreignKey: {
+          name: 'accountId',
+          type: DataTypes.UUID,
+          allowNull: false
+        }
+      })
     }
   }
   User.init(
@@ -54,10 +62,6 @@ module.exports = (sequelize, DataTypes) => {
       gender: {
         type: DataTypes.STRING(1),
         allowNull: true
-      },
-      accountId: {
-        type: DataTypes.UUID,
-        allowNull: false
       }
     },
     {
