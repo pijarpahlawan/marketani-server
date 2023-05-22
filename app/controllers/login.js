@@ -41,7 +41,10 @@ const login = async (req, res) => {
       throw new ValidationError('Wrong password')
     }
 
-    const payload = { account: account.accountId }
+    const user = await account.getUser()
+
+    const payload = { user: user.userId }
+
     const token = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
       expiresIn: '30d',
       algorithm: 'HS256'
@@ -52,7 +55,7 @@ const login = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(200).json({ token })
+    return res.status(200).json({ user: user.userId })
   } catch (error) {
     error.statusCode = error instanceof ValidationError ? 400 : 500
 

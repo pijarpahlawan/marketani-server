@@ -42,10 +42,10 @@ const register = async (req, res) => {
     const salt = await bcrypt.genSalt(saltRounds)
     const encryptedPassword = await bcrypt.hash(password, salt)
 
-    const newUserAccount = await sequelize.transaction(
+    const newAccount = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
-        const newAccount = await Account.create(
+        return await Account.create(
           {
             email,
             password: encryptedPassword,
@@ -62,11 +62,12 @@ const register = async (req, res) => {
           },
           { transaction: t, include: [Account.User] }
         )
-        return { newAccount }
       }
     )
 
-    const payload = { account: newUserAccount.newAccount.accountId }
+    const newUser = await newAccount.getUser()
+
+    const payload = { user: newUser.userId }
 
     const token = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
       expiresIn: '30d',
@@ -78,7 +79,7 @@ const register = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(201).json({ token })
+    return res.status(201).json({ user: newUser.userId })
   } catch (error) {
     error.statusCode = error instanceof ValidationError ? 400 : 500
 
