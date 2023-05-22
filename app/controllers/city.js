@@ -18,7 +18,8 @@ const province = (req, res) => {
           statusCode: parsedData.rajaongkir.status.code,
           message: parsedData.rajaongkir.status.description
         }
-        throw new Error(error)
+        res.status(error.statusCode).json({ message: error.message })
+        console.error({ statusode: error.statusCode, message: error.message })
       }
 
       res.status(200).json({ body: parsedData.rajaongkir.results })

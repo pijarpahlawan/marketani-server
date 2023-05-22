@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt')
 const jsonwebtoken = require('jsonwebtoken')
 const accountModel = require('../models/account')
 const userModel = require('../models/user')
+const accountValidator = require('../validation/accountValidator')
+const userValidator = require('../validation/userValidator')
 const { development: dev } = require('../../config/database')
 
 const register = async (req, res) => {
@@ -18,42 +20,54 @@ const register = async (req, res) => {
 
   const Account = accountModel(sequelize, DataTypes)
   const User = userModel(sequelize, DataTypes)
-
-  const { email, password, username } = req.body
+  Account.associate({ User })
+  User.associate({ Account })
 
   try {
+    const { email, password, repeatedPassword, username } = req.body
+    const { error: accountError } = accountValidator.validate({
+      email,
+      password,
+      repeatedPassword
+    })
+    const { error: userError } = userValidator.validate({ username })
+
+    if (accountError !== undefined) {
+      throw new ValidationError(accountError.message)
+    } else if (userError !== undefined) {
+      throw new ValidationError(userError.message)
+    }
+
     const saltRounds = 10
     const salt = await bcrypt.genSalt(saltRounds)
     const encryptedPassword = await bcrypt.hash(password, salt)
+
     const newUserAccount = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
         const newAccount = await Account.create(
           {
             email,
-            password: encryptedPassword
+            password: encryptedPassword,
+            User: {
+              avatarUrl: null,
+              username,
+              name: null,
+              phone: null,
+              provinceId: null,
+              cityId: null,
+              address: null,
+              gender: null
+            }
           },
-          { transaction: t }
+          { transaction: t, include: [Account.User] }
         )
-        const newUser = await User.create(
-          {
-            avatarUrl: null,
-            username,
-            name: null,
-            phone: null,
-            provinceId: null,
-            cityId: null,
-            address: null,
-            gender: null,
-            accountId: newAccount.accountId
-          },
-          { transaction: t }
-        )
-        return { newAccount, newUser }
+        return { newAccount }
       }
     )
 
     const payload = { account: newUserAccount.newAccount.accountId }
+
     const token = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
       expiresIn: '30d',
       algorithm: 'HS256'
@@ -66,18 +80,10 @@ const register = async (req, res) => {
 
     return res.status(201).json({ token })
   } catch (error) {
-    res.end()
-
     error.statusCode = error instanceof ValidationError ? 400 : 500
 
+    res.status(error.statusCode).json({ message: error.message })
     console.error({ statusode: error.statusCode, message: error.message })
-
-    // throw error
-    // if (error instanceof ValidationError) {
-    //   return res.status(400).json({ message: error.message })
-    // } else {
-    //   return res.status(500).json({ message: error.message })
-    // }
   } finally {
     sequelize.close()
   }

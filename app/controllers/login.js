@@ -7,6 +7,7 @@ const {
 const bcrypt = require('bcrypt')
 const jsonwebtoken = require('jsonwebtoken')
 const accountModel = require('../models/account')
+const userModel = require('../models/user')
 const { development: dev } = require('../../config/database')
 
 const login = async (req, res) => {
@@ -16,19 +17,17 @@ const login = async (req, res) => {
   })
 
   const Account = accountModel(sequelize, DataTypes)
-
-  const { email, password } = req.body
+  const User = userModel(sequelize, DataTypes)
+  Account.associate({ User })
+  User.associate({ Account })
 
   try {
+    const { email = '', password = '' } = req.body
+
     const account = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
-        const accountFinded = await Account.findOne(
-          { where: { email } },
-          { transaction: t }
-        )
-
-        return accountFinded
+        return await Account.findOne({ where: { email } }, { transaction: t })
       }
     )
 
@@ -55,18 +54,10 @@ const login = async (req, res) => {
 
     return res.status(200).json({ token })
   } catch (error) {
-    res.end()
-
     error.statusCode = error instanceof ValidationError ? 400 : 500
 
-    console.error(error)
-
-    throw error
-    // if (error instanceof ValidationError) {
-    //   return res.status(400).json({ message: error.message })
-    // } else {
-    //   return res.status(500).json({ message: error.message })
-    // }
+    res.status(error.statusCode).json({ message: error.message })
+    console.error({ statusode: error.statusCode, message: error.message })
   } finally {
     sequelize.close()
   }
