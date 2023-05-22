@@ -23,7 +23,7 @@ app.use(
   `/${apiVersion}`,
   expressjwt({
     secret: process.env.JWT_SECRET,
-    getToken: (req) => req.cookies.token,
+    getToken: (req) => req.cookies.marketaniAuthenticatedUser,
     algorithms: ['HS256']
   }),
   protectedRoutes

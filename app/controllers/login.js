@@ -47,7 +47,7 @@ const login = async (req, res) => {
       algorithm: 'HS256'
     })
 
-    res.cookie('token', token, {
+    res.cookie('marketaniAuthenticatedUser', token, {
       httpOnly: true,
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
