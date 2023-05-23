@@ -4,5 +4,6 @@ const register = require('./register')
 const province = require('./province')
 const city = require('./city')
 const cost = require('./cost')
+const { getProfile } = require('./profile')
 
-module.exports = { root, login, register, province, city, cost }
+module.exports = { root, login, register, province, city, cost, getProfile }

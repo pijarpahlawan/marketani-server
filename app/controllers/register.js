@@ -67,7 +67,7 @@ const register = async (req, res) => {
 
     const newUser = await newAccount.getUser()
 
-    const payload = { user: newUser.userId }
+    const payload = { userId: newUser.userId }
 
     const token = jsonwebtoken.sign(payload, process.env.JWT_SECRET, {
       expiresIn: '30d',
@@ -79,14 +79,14 @@ const register = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(201).json({ user: newUser.userId })
+    return res.status(201).json({ userId: newUser.userId })
   } catch (error) {
     error.statusCode = error instanceof ValidationError ? 400 : 500
 
-    res.status(error.statusCode).json({ message: error.message })
     console.error({ statusode: error.statusCode, message: error.message })
+    return res.status(error.statusCode).json({ message: error.message })
   } finally {
-    sequelize.close()
+    await sequelize.close()
   }
 }
 

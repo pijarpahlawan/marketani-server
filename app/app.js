@@ -1,10 +1,10 @@
 const cors = require('cors')
 const express = require('express')
 const { expressjwt } = require('express-jwt')
+const cookieParser = require('cookie-parser')
 const publicRoutes = require('./routes/public')
 const protectedRoutes = require('./routes/protected')
 const { apiVersion, host, port, originAllowed } = require('../config/network')
-const cookieParser = require('cookie-parser')
 
 const app = express()
 
@@ -26,6 +26,10 @@ app.use(
     getToken: (req) => req.cookies.marketaniAuthenticatedUser,
     algorithms: ['HS256']
   }),
+  // (req, res, next) => {
+  //   console.log(req.auth)
+  //   next()
+  // },
   protectedRoutes
 )
 
