@@ -1,6 +1,6 @@
 {
   "name": "marketani-server",
-  "version": "0.2.0",
+  "version": "0.3.1",
   "description": "Server side for marketani website",
   "main": "app.js",
   "scripts": {
