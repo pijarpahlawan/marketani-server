@@ -9,17 +9,26 @@ const province = async (req, res) => {
     })
     .then((response) => {
       const parsedData = response.data
+      const body = {}
 
       if (parsedData.rajaongkir.status.code !== 200) {
-        const error = {
-          statusCode: parsedData.rajaongkir.status.code,
-          message: parsedData.rajaongkir.status.description
-        }
-        res.status(error.statusCode).json({ message: error.message })
-        console.error({ statusode: error.statusCode, message: error.message })
+        body.code = parsedData.rajaongkir.status.code
+        body.status =
+          parsedData.rajaongkir.status.code < 500
+            ? 'Client Error'
+            : 'Server Error'
+        body.message = parsedData.rajaongkir.status.description
+
+        console.error(body)
+        return res.status(body.code).json(body)
       }
 
-      res.status(200).json({ body: parsedData.rajaongkir.results })
+      body.code = 200
+      body.status = 'OK'
+      body.message = 'Success'
+      body.data = parsedData.rajaongkir.results
+
+      return res.status(200).json(body)
     })
 }
 

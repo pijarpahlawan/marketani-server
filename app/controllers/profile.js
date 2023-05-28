@@ -1,5 +1,11 @@
-const { Sequelize, DataTypes, Transaction } = require('sequelize')
+const {
+  Sequelize,
+  DataTypes,
+  Transaction,
+  ValidationError
+} = require('sequelize')
 const userModel = require('../models/user')
+const userValidator = require('../validation/userValidator')
 const { development: dev } = require('../../config/database')
 
 const getProfile = async (req, res) => {
@@ -20,11 +26,25 @@ const getProfile = async (req, res) => {
       }
     )
 
-    return res.status(200).json({ user })
+    const response = {
+      code: 200,
+      status: 'OK',
+      message: 'Success',
+      data: user
+    }
+
+    return res.status(200).json(response)
   } catch (error) {
     error.statusCode = 500
-    console.error({ statusode: error.statusCode, message: error.message })
-    return res.status(error.statusCode).json({ error: error.message })
+
+    const response = {
+      code: error.statusCode,
+      status: 'Internal Server Error',
+      message: error.message
+    }
+
+    console.error(response)
+    return res.status(response.code).json(response)
   } finally {
     await sequelize.close()
   }
@@ -42,6 +62,12 @@ const updateProfile = async (req, res) => {
     const { userId } = req.auth
     const update = req.body
 
+    const { error } = userValidator.validate(update)
+
+    if (error !== undefined) {
+      throw new ValidationError(error.message)
+    }
+
     const numberAffected = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
@@ -53,11 +79,26 @@ const updateProfile = async (req, res) => {
       }
     )
 
-    return res.status(200).json({ numberAffected })
+    const body = {
+      code: 200,
+      status: 'OK',
+      message: 'Success',
+      data: numberAffected
+    }
+
+    return res.status(200).json(body)
   } catch (error) {
-    error.statusCode = 500
-    console.error({ statusode: error.statusCode, message: error.message })
-    return res.status(error.statusCode).json({ error: error.message })
+    error.statusCode = error instanceof ValidationError ? 400 : 500
+
+    const body = {
+      code: error.statusCode,
+      status:
+        error.statusCode === 400 ? 'Bad Request' : 'Internal Server Error',
+      message: error.message
+    }
+
+    console.error(body)
+    return res.status(error.statusCode).json(body)
   } finally {
     await sequelize.close()
   }

@@ -55,12 +55,26 @@ const login = async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(200).json({ userId: user.userId })
+    const body = {
+      code: 200,
+      status: 'OK',
+      message: 'Login success',
+      data: user.userId
+    }
+
+    return res.status(200).json(body)
   } catch (error) {
     error.statusCode = error instanceof ValidationError ? 400 : 500
 
-    console.error({ statusode: error.statusCode, message: error.message })
-    return res.status(error.statusCode).json({ message: error.message })
+    const body = {
+      code: error.statusCode,
+      status:
+        error.statusCode === 400 ? 'Bad Request' : 'Internal Server Error',
+      message: error.message
+    }
+
+    console.error(body)
+    return res.status(body.code).json(body)
   } finally {
     await sequelize.close()
   }

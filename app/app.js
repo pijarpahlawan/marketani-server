@@ -13,12 +13,18 @@ const corsOptions = {
   optionSuccessStatus: 200
 }
 
-// middleware
 app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 
-app.use(`/${apiVersion}`, publicRoutes)
+app.use(
+  `/${apiVersion}`,
+  (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json')
+    next()
+  },
+  publicRoutes
+)
 app.use(
   `/${apiVersion}`,
   expressjwt({
@@ -26,16 +32,12 @@ app.use(
     getToken: (req) => req.cookies.marketaniAuthenticatedUser,
     algorithms: ['HS256']
   }),
-  // (req, res, next) => {
-  //   console.log(req.auth)
-  //   next()
-  // },
+  (req, res, next) => {
+    res.setHeader('Content-Type', 'application/json')
+    next()
+  },
   protectedRoutes
 )
-
-app.get('/', (req, res) => {
-  res.status(302).redirect(`/${apiVersion}`)
-})
 
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}`)

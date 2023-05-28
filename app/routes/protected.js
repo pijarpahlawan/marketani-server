@@ -1,6 +1,11 @@
 const express = require('express')
-const { province, city, cost, getProfile } = require('../controllers')
-const { updateProfile } = require('../controllers/profile')
+const {
+  province,
+  city,
+  cost,
+  getProfile,
+  updateProfile
+} = require('../controllers')
 
 const routes = express.Router()
 
