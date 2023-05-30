@@ -1,4 +1,5 @@
 const login = require('./login')
+const logout = require('./logout')
 const register = require('./register')
 const province = require('./province')
 const city = require('./city')
@@ -12,5 +13,6 @@ module.exports = {
   city,
   cost,
   getProfile,
-  updateProfile
+  updateProfile,
+  logout
 }

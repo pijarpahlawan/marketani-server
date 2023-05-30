@@ -26,25 +26,25 @@ const getProfile = async (req, res) => {
       }
     )
 
-    const response = {
+    const body = {
       code: 200,
       status: 'OK',
       message: 'Success',
       data: user
     }
 
-    return res.status(200).json(response)
+    return res.status(200).json(body)
   } catch (error) {
     error.statusCode = 500
 
-    const response = {
+    const body = {
       code: error.statusCode,
       status: 'Internal Server Error',
       message: error.message
     }
 
-    console.error(response)
-    return res.status(response.code).json(response)
+    console.error(body)
+    return res.status(body.code).json(body)
   } finally {
     await sequelize.close()
   }

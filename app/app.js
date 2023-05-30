@@ -4,37 +4,36 @@ const { expressjwt } = require('express-jwt')
 const cookieParser = require('cookie-parser')
 const publicRoutes = require('./routes/public')
 const protectedRoutes = require('./routes/protected')
-const { apiVersion, host, port, originAllowed } = require('../config/network')
+const { host, port } = require('../config/network')
 
 const app = express()
 
-const corsOptions = {
-  origin: originAllowed,
-  optionSuccessStatus: 200
-}
-
-app.use(cors(corsOptions))
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json')
+  next()
+})
 
+app.use(publicRoutes)
 app.use(
-  `/${apiVersion}`,
-  (req, res, next) => {
-    res.setHeader('Content-Type', 'application/json')
-    next()
-  },
-  publicRoutes
-)
-app.use(
-  `/${apiVersion}`,
   expressjwt({
     secret: process.env.JWT_SECRET,
     getToken: (req) => req.cookies.marketaniAuthenticatedUser,
     algorithms: ['HS256']
   }),
-  (req, res, next) => {
-    res.setHeader('Content-Type', 'application/json')
-    next()
+  (err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+      const body = {
+        code: err.status,
+        status: 'Unauthorized',
+        message: err.message
+      }
+
+      console.error(body)
+      return res.status(body.code).json(body)
+    }
   },
   protectedRoutes
 )

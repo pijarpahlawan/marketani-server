@@ -4,7 +4,8 @@ const {
   city,
   cost,
   getProfile,
-  updateProfile
+  updateProfile,
+  logout
 } = require('../controllers')
 
 const routes = express.Router()
@@ -19,5 +20,6 @@ routes.get('/cost', cost)
 // profile route
 routes.get('/profile', getProfile)
 routes.put('/profile', updateProfile)
+routes.get('/logout', logout)
 
 module.exports = routes
