@@ -1,20 +1,11 @@
-const {
-  Sequelize,
-  DataTypes,
-  Transaction,
-  ValidationError
-} = require('sequelize')
-const userModel = require('../models/user')
+const { Sequelize, Transaction, ValidationError } = require('sequelize')
+const { User } = require('../models')
 const userValidator = require('../validation/userValidator')
-const { development: dev } = require('../../config/database')
+const env = process.env.NODE_ENV || 'development'
+const dbConfig = require('../../config/database')[env]
 
 const getProfile = async (req, res) => {
-  const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
-    host: dev.host,
-    dialect: dev.dialect
-  })
-
-  const User = userModel(sequelize, DataTypes)
+  const sequelize = new Sequelize(dbConfig)
 
   try {
     const { userId } = req.auth
@@ -51,12 +42,7 @@ const getProfile = async (req, res) => {
 }
 
 const updateProfile = async (req, res) => {
-  const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
-    host: dev.host,
-    dialect: dev.dialect
-  })
-
-  const User = userModel(sequelize, DataTypes)
+  const sequelize = new Sequelize(dbConfig)
 
   try {
     const { userId } = req.auth

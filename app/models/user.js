@@ -9,10 +9,46 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate (models) {
       this.Account = User.belongsTo(models.Account, {
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
+        onUpdate: 'RESTRICT',
+        onDelete: 'RESTRICT',
         foreignKey: {
           name: 'accountId',
+          type: DataTypes.UUID,
+          allowNull: false
+        }
+      })
+      this.Transaction = User.hasMany(models.Transaction, {
+        onUpdate: 'RESTRICT',
+        onDelete: 'RESTRICT',
+        foreignKey: {
+          name: 'userId',
+          type: DataTypes.UUID,
+          allowNull: false
+        }
+      })
+      this.Product = User.hasMany(models.Product, {
+        onUpdate: 'RESTRICT',
+        onDelete: 'RESTRICT',
+        foreignKey: {
+          name: 'userId',
+          type: DataTypes.UUID,
+          allowNull: false
+        }
+      })
+      this.Favorite = User.hasMany(models.Favorite, {
+        onUpdate: 'RESTRICT',
+        onDelete: 'RESTRICT',
+        foreignKey: {
+          name: 'userId',
+          type: DataTypes.UUID,
+          allowNull: false
+        }
+      })
+      this.Cart = User.hasMany(models.Cart, {
+        onUpdate: 'RESTRICT',
+        onDelete: 'RESTRICT',
+        foreignKey: {
+          name: 'userId',
           type: DataTypes.UUID,
           allowNull: false
         }

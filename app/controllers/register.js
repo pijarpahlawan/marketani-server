@@ -1,27 +1,14 @@
-const {
-  Sequelize,
-  DataTypes,
-  Transaction,
-  ValidationError
-} = require('sequelize')
+const { Sequelize, Transaction, ValidationError } = require('sequelize')
 const bcrypt = require('bcrypt')
 const jsonwebtoken = require('jsonwebtoken')
-const accountModel = require('../models/account')
-const userModel = require('../models/user')
+const { Account } = require('../models')
 const accountValidator = require('../validation/accountValidator')
 const userValidator = require('../validation/userValidator')
-const { development: dev } = require('../../config/database')
+const env = process.env.NODE_ENV || 'development'
+const dbConfig = require('../../config/database')[env]
 
 const register = async (req, res) => {
-  const sequelize = new Sequelize(dev.database, dev.username, dev.password, {
-    host: dev.host,
-    dialect: dev.dialect
-  })
-
-  const Account = accountModel(sequelize, DataTypes)
-  const User = userModel(sequelize, DataTypes)
-  Account.associate({ User })
-  User.associate({ Account })
+  const sequelize = new Sequelize(dbConfig)
 
   try {
     const { email, password, repeatedPassword, username } = req.body
