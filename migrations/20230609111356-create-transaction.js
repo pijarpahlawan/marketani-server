@@ -11,7 +11,8 @@ module.exports = {
         field: 'transaction_id'
       },
       courierId: {
-        type: Sequelize.STRING(4),
+        type: Sequelize.ENUM,
+        values: ['jne', 'tiki', 'pos'],
         allowNull: false,
         field: 'courier_id'
       },

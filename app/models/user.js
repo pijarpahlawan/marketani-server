@@ -35,18 +35,9 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       })
-      this.Favorite = User.hasMany(models.Favorite, {
-        onUpdate: 'RESTRICT',
-        onDelete: 'RESTRICT',
-        foreignKey: {
-          name: 'userId',
-          type: DataTypes.UUID,
-          allowNull: false
-        }
-      })
       this.Cart = User.hasMany(models.Cart, {
-        onUpdate: 'RESTRICT',
-        onDelete: 'RESTRICT',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
         foreignKey: {
           name: 'userId',
           type: DataTypes.UUID,
@@ -66,14 +57,6 @@ module.exports = (sequelize, DataTypes) => {
       avatarUrl: {
         type: DataTypes.STRING,
         allowNull: true
-      },
-      username: {
-        type: DataTypes.STRING(30),
-        allowNull: false,
-        unique: {
-          name: 'username',
-          msg: 'Username already exists'
-        }
       },
       name: {
         type: DataTypes.STRING(30),

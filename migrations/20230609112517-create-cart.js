@@ -13,6 +13,11 @@ module.exports = {
         allowNull: false,
         field: 'product_id'
       },
+      quantity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'quantity'
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

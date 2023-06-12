@@ -42,7 +42,8 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true
       },
       courierId: {
-        type: DataTypes.STRING(4),
+        type: DataTypes.ENUM,
+        values: ['jne', 'tiki', 'pos'],
         allowNull: false
       },
       totalBill: {

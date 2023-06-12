@@ -31,15 +31,6 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false
         }
       })
-      this.Favorite = Product.hasMany(models.Favorite, {
-        onUpdate: 'CASCADE',
-        onDelete: 'CASCADE',
-        foreignKey: {
-          name: 'productId',
-          type: DataTypes.UUID,
-          allowNull: false
-        }
-      })
       this.Cart = Product.hasMany(models.Cart, {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',

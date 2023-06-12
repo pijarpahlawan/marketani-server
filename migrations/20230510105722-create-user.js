@@ -15,12 +15,6 @@ module.exports = {
         allowNull: true,
         field: 'avatar_url'
       },
-      username: {
-        type: Sequelize.STRING(30),
-        allowNull: false,
-        unique: true,
-        field: 'username'
-      },
       name: {
         type: Sequelize.STRING(30),
         allowNull: true,

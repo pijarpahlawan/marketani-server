@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   TransactionDetail.init(
     {
-      ammount: {
+      quantity: {
         type: DataTypes.INTEGER,
         allowNull: false
       }

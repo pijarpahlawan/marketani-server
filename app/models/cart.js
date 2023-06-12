@@ -30,7 +30,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Cart.init(
-    {},
+    {
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
+    },
     {
       sequelize,
       modelName: 'Cart',

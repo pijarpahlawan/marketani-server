@@ -27,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true
       },
+      username: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+        unique: {
+          name: 'username',
+          msg: 'Username already exists'
+        }
+      },
       email: {
         type: DataTypes.STRING,
         allowNull: false,

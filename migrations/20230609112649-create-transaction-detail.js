@@ -13,10 +13,10 @@ module.exports = {
         allowNull: false,
         field: 'product_id'
       },
-      ammount: {
+      quantity: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        field: 'ammount'
+        field: 'quantity'
       },
       createdAt: {
         allowNull: false,
