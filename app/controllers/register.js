@@ -43,7 +43,7 @@ const register = async (req, res) => {
               username
             }
           },
-          { transaction: t, include: [Account.User] }
+          { transaction: t, include: User }
         )
       }
     )

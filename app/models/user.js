@@ -68,8 +68,7 @@ module.exports = (sequelize, DataTypes) => {
         }),
         phone: joi
           .string()
-          .max(15)
-          .regex(/^(?!.*\s)[0-9]$/)
+          .regex(/^\+?\d{1,15}$/)
           .trim()
           .messages({
             'string.empty': 'Phone cannot be empty',

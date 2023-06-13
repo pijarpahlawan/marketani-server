@@ -4,15 +4,16 @@ const register = require('./register')
 const province = require('./province')
 const city = require('./city')
 const cost = require('./cost')
-const { getProfile, updateProfile } = require('./profile')
+const { getAccount, updateAccount, updatePassword } = require('./account')
 
 module.exports = {
   login,
   register,
+  logout,
   province,
+  getAccount,
+  updateAccount,
+  updatePassword,
   city,
-  cost,
-  getProfile,
-  updateProfile,
-  logout
+  cost
 }
