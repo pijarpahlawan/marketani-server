@@ -1,5 +1,8 @@
 'use strict'
+
+const joi = require('joi')
 const { Model } = require('sequelize')
+
 module.exports = (sequelize, DataTypes) => {
   class Product extends Model {
     /**
@@ -41,6 +44,35 @@ module.exports = (sequelize, DataTypes) => {
         }
       })
     }
+
+    static validate (model) {
+      const validationSchema = joi.object({
+        productName: joi.string().min(1).max(60).trim().messages({
+          'string.empty': 'Product name cannot be empty',
+          'string.pattern.base':
+            'Product name must be alphanumeric and 3-60 characters long'
+        }),
+        description: joi.string().trim().messages({
+          'string.empty': 'Description cannot be empty'
+        }),
+        weight: joi.number().integer().min(1).messages({
+          'number.base': 'Weight must be a number',
+          'number.empty': 'Weight cannot be empty',
+          'number.min': 'Weight must be greater than 0'
+        }),
+        stock: joi.number().integer().min(1).messages({
+          'number.base': 'Stock must be a number',
+          'number.empty': 'Stock cannot be empty',
+          'number.min': 'Stock must be greater than 0'
+        }),
+        price: joi.number().integer().min(1).messages({
+          'number.base': 'Price must be a number',
+          'number.empty': 'Price cannot be empty',
+          'number.min': 'Price must be greater than 0'
+        })
+      })
+      return validationSchema.validate(model)
+    }
   }
   Product.init(
     {
@@ -79,7 +111,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'Product',
       tableName: 'products',
-      underscored: true
+      underscored: true,
+      paranoid: true
     }
   )
   return Product

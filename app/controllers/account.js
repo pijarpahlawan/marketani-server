@@ -18,11 +18,7 @@ const getAccount = async (req, res) => {
     const user = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
-        return await User.findByPk(
-          userId,
-          { include: Account },
-          { transaction: t }
-        )
+        return await User.findByPk(userId, { transaction: t, include: Account })
       }
     )
 
@@ -84,11 +80,10 @@ const updateAccount = async (req, res) => {
     await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
-        const user = await User.findByPk(
-          userId,
-          { include: Account },
-          { transaction: t }
-        )
+        const user = await User.findByPk(userId, {
+          transaction: t,
+          include: Account
+        })
 
         await User.update(
           {
@@ -165,11 +160,10 @@ const updatePassword = async (req, res) => {
     await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
-        const user = await User.findByPk(
-          userId,
-          { include: Account },
-          { transaction: t }
-        )
+        const user = await User.findByPk(userId, {
+          transaction: t,
+          include: Account
+        })
 
         const match = await bcrypt.compare(oldPassword, user.Account.password)
 

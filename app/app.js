@@ -2,12 +2,18 @@ const cors = require('cors')
 const express = require('express')
 const { expressjwt } = require('express-jwt')
 const cookieParser = require('cookie-parser')
+const qs = require('qs')
 const publicRoutes = require('./routes/public')
 const protectedRoutes = require('./routes/protected')
 const { host, port } = require('../config/network')
 
+// instance of express
 const app = express()
 
+// set query parser
+app.set('query parser', (str) => qs.parse(str, { arrayLimit: 1000 }))
+
+// middlewares
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
@@ -16,6 +22,7 @@ app.use((req, res, next) => {
   next()
 })
 
+// routes
 app.use(publicRoutes)
 app.use(
   expressjwt({

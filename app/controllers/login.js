@@ -51,8 +51,8 @@ const login = async (req, res) => {
     return res.status(200).json(response)
   } catch (error) {
     if (error instanceof ValidationError) {
-      error.code = 400
-      error.status = 'Bad Request'
+      error.code = 401
+      error.status = 'Unauthorized'
     } else {
       error.code = 500
       error.status = 'Internal Server Error'

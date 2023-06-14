@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'RESTRICT',
         onDelete: 'RESTRICT',
         foreignKey: {
-          name: 'userId',
+          name: 'sellerId',
           type: DataTypes.UUID,
           allowNull: false
         }
@@ -149,7 +149,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: 'User',
       tableName: 'users',
-      underscored: true
+      underscored: true,
+      paranoid: true
     }
   )
   return User
