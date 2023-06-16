@@ -1,3 +1,9 @@
+/**
+ * Logout user
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const logout = async (req, res) => {
   try {
     const response = {
@@ -6,6 +12,7 @@ const logout = async (req, res) => {
       message: 'Logout success'
     }
 
+    // clear cookie
     res.clearCookie('marketaniAuthenticatedUser')
 
     return res.status(200).json(response)

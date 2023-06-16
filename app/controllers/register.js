@@ -10,28 +10,36 @@ const { Account, User } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const dbConfig = require('../../config/database')[env]
 
+/**
+ * Register a new user
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const register = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
     const { username, email, password, passwordConfirmation } = req.body
 
+    // validate request body
     const { error: accountError } = Account.validate({
       email,
       password,
       passwordConfirmation
     })
-
     const { error: userError } = User.validate({ username })
 
     if ((accountError || userError) !== undefined) {
       throw new ValidationError((accountError || userError).message)
     }
 
+    // encrypt password
     const saltRounds = 10
     const salt = await bcrypt.genSalt(saltRounds)
     const encryptedPassword = await bcrypt.hash(password, salt)
 
+    // create new user
     const newAccount = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
@@ -48,6 +56,7 @@ const register = async (req, res) => {
       }
     )
 
+    // generate token and set cookie
     const newUser = await newAccount.getUser()
 
     const token = jsonwebtoken.sign(

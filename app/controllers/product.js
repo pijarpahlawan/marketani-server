@@ -3,12 +3,19 @@ const { Product } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const dbConfig = require('../../config/database')[env]
 
+/**
+ * Get all products
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const getAllProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
     const { search = '' } = req.query
 
+    // search product by name
     const products = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
@@ -26,6 +33,7 @@ const getAllProduct = async (req, res) => {
       }
     )
 
+    // trow error if no product found
     if (Object.keys(products).length === 0) {
       throw new ValidationError('No products found')
     }
@@ -57,12 +65,19 @@ const getAllProduct = async (req, res) => {
   }
 }
 
+/**
+ * Get a single product
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const getSingleProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
     const { productId } = req.params
 
+    // Get product information
     const product = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
@@ -73,6 +88,7 @@ const getSingleProduct = async (req, res) => {
       }
     )
 
+    // throw error if no product found
     if (product === null) {
       throw new ValidationError('No products found')
     }
@@ -105,6 +121,12 @@ const getSingleProduct = async (req, res) => {
   }
 }
 
+/**
+ * Create a new product
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const createProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
@@ -112,12 +134,14 @@ const createProduct = async (req, res) => {
     const { userId } = req.auth
     const { productName, description, weight, stock, price } = req.body
 
+    // validate request body
     const { error } = Product.validate(req.body)
 
     if (error !== undefined) {
       throw new ValidationError(error.message)
     }
 
+    // create new product
     await sequelize.transaction(
       {
         isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED
@@ -165,6 +189,12 @@ const createProduct = async (req, res) => {
   }
 }
 
+/**
+ * Update a product
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const updateProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
@@ -172,12 +202,14 @@ const updateProduct = async (req, res) => {
     const { productId } = req.params
     const { productName, description, weight, stock, price } = req.body
 
+    // validate request body
     const { error } = Product.validate(req.body)
 
     if (error !== undefined) {
       throw new ValidationError(error.message)
     }
 
+    // update product
     await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
@@ -227,12 +259,19 @@ const updateProduct = async (req, res) => {
   }
 }
 
+/**
+ * Delete a product
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const deleteProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
     const { productId } = req.params
 
+    // delete product
     await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {

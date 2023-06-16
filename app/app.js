@@ -1,5 +1,5 @@
-const cors = require('cors')
 const express = require('express')
+const cors = require('cors')
 const { expressjwt } = require('express-jwt')
 const cookieParser = require('cookie-parser')
 const qs = require('qs')
@@ -7,13 +7,11 @@ const publicRoutes = require('./routes/public')
 const protectedRoutes = require('./routes/protected')
 const { host, port } = require('../config/network')
 
-// instance of express
 const app = express()
 
-// set query parser
 app.set('query parser', (str) => qs.parse(str, { arrayLimit: 1000 }))
 
-// middlewares
+// TODO: give environment variable to cors origin
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
@@ -22,7 +20,6 @@ app.use((req, res, next) => {
   next()
 })
 
-// routes
 app.use(publicRoutes)
 app.use(
   expressjwt({
@@ -32,14 +29,14 @@ app.use(
   }),
   (err, req, res, next) => {
     if (err.name === 'UnauthorizedError') {
-      const body = {
+      const response = {
         code: err.status,
         status: 'Unauthorized',
         message: err.message
       }
 
-      console.error(body)
-      return res.status(body.code).json(body)
+      console.error(response)
+      return res.status(response.code).json(response)
     }
   },
   protectedRoutes

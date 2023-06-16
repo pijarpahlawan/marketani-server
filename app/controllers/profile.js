@@ -9,12 +9,19 @@ const { User, Account } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const dbConfig = require('../../config/database')[env]
 
-const getAccount = async (req, res) => {
+/**
+ * Get user profile
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+const getProfile = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
     const { userId } = req.auth
 
+    // Get user information
     const user = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
@@ -45,7 +52,13 @@ const getAccount = async (req, res) => {
   }
 }
 
-const updateAccount = async (req, res) => {
+/**
+ * Update user profile
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
+const updateProfile = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
@@ -61,6 +74,7 @@ const updateAccount = async (req, res) => {
       gender
     } = req.body
 
+    // validate request body
     const { error: userError } = User.validate({
       username,
       name,
@@ -77,6 +91,7 @@ const updateAccount = async (req, res) => {
       throw new ValidationError((userError || accountError).message)
     }
 
+    // update user information
     await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
@@ -141,6 +156,12 @@ const updateAccount = async (req, res) => {
   }
 }
 
+/**
+ * Update user password
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const updatePassword = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
@@ -148,6 +169,7 @@ const updatePassword = async (req, res) => {
     const { userId } = req.auth
     const { oldPassword, newPassword, passwordConfirmation } = req.body
 
+    // validate request body
     const { error } = Account.validate({
       password: newPassword,
       passwordConfirmation
@@ -157,6 +179,7 @@ const updatePassword = async (req, res) => {
       throw new ValidationError(error.message)
     }
 
+    // update user password
     await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
       async (t) => {
@@ -211,4 +234,4 @@ const updatePassword = async (req, res) => {
     return res.status(response.code).json(response)
   }
 }
-module.exports = { getAccount, updateAccount, updatePassword }
+module.exports = { getProfile, updateProfile, updatePassword }

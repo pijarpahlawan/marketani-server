@@ -1,6 +1,12 @@
 const axios = require('axios')
 const { rajaongkirAPIKEY } = require('../../config/thirdParty')
 
+/**
+ * Get cost data from RajaOngkir API
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const cost = (req, res) => {
   return axios
     .post('https://api.rajaongkir.com/starter/cost', req.body, {
@@ -8,28 +14,28 @@ const cost = (req, res) => {
         key: rajaongkirAPIKEY
       }
     })
-    .then((response) => {
-      const parsedData = response.data
-      const body = {}
+    .then((res) => {
+      const parsedData = res.data
+      const response = {}
 
       if (parsedData.rajaongkir.status.code !== 200) {
-        body.code = parsedData.rajaongkir.status.code
-        body.status =
+        response.code = parsedData.rajaongkir.status.code
+        response.status =
           parsedData.rajaongkir.status.code < 500
             ? 'Client Error'
             : 'Server Error'
-        body.message = parsedData.rajaongkir.status.description
+        response.message = parsedData.rajaongkir.status.description
 
-        console.error(body)
-        return res.status(body.code).json(body)
+        console.error(response)
+        return res.status(response.code).json(response)
       }
 
-      body.code = 200
-      body.status = 'OK'
-      body.message = 'Success'
-      body.data = parsedData.rajaongkir.results
+      response.code = 200
+      response.status = 'OK'
+      response.message = 'Success'
+      response.data = parsedData.rajaongkir.results
 
-      return res.status(200).json(body)
+      return res.status(200).json(response)
     })
 }
 

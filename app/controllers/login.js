@@ -5,12 +5,19 @@ const { Account } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const dbConfig = require('../../config/database')[env]
 
+/**
+ * Login user
+ * @param {*} req
+ * @param {*} res
+ * @returns
+ */
 const login = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
-    const { email = '', password = '' } = req.body
+    const { email, password } = req.body
 
+    // validate request body
     const account = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
@@ -22,12 +29,14 @@ const login = async (req, res) => {
       throw new ValidationError('Email not found')
     }
 
+    // compare password
     const match = await bcrypt.compare(password, account.password)
 
     if (!match) {
       throw new ValidationError('Wrong password')
     }
 
+    // generate token and set cookie
     const user = await account.getUser()
 
     const payload = { userId: user.userId }

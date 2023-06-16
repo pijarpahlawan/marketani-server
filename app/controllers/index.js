@@ -1,31 +1,31 @@
-const login = require('./login')
-const logout = require('./logout')
-const register = require('./register')
-const province = require('./province')
 const city = require('./city')
 const cost = require('./cost')
-const { getAccount, updateAccount, updatePassword } = require('./account')
+const province = require('./province')
+const register = require('./register')
+const login = require('./login')
+const logout = require('./logout')
+const { getProfile, updateProfile, updatePassword } = require('./profile')
 const {
-  createProduct,
-  deleteProduct,
   getAllProduct,
   getSingleProduct,
-  updateProduct
+  createProduct,
+  updateProduct,
+  deleteProduct
 } = require('./product')
 
 module.exports = {
-  login,
-  register,
-  logout,
   province,
   city,
   cost,
-  getAccount,
-  updateAccount,
+  register,
+  login,
+  logout,
+  getProfile,
+  updateProfile,
   updatePassword,
-  createProduct,
-  deleteProduct,
   getAllProduct,
   getSingleProduct,
-  updateProduct
+  createProduct,
+  updateProduct,
+  deleteProduct
 }
