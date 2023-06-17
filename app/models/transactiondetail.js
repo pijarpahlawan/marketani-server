@@ -12,24 +12,28 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'productId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'productId'
         }
       })
       this.Transaction = TransactionDetail.belongsTo(models.Transaction, {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'transactionId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'transactionId'
         }
       })
     }
   }
   TransactionDetail.init(
     {
+      productId: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      transactionId: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
       quantity: {
         type: DataTypes.INTEGER,
         allowNull: false

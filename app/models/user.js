@@ -15,36 +15,28 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'RESTRICT',
         onDelete: 'RESTRICT',
         foreignKey: {
-          name: 'accountId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'accountId'
         }
       })
       this.Transaction = User.hasMany(models.Transaction, {
         onUpdate: 'RESTRICT',
         onDelete: 'RESTRICT',
         foreignKey: {
-          name: 'userId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'userId'
         }
       })
       this.Product = User.hasMany(models.Product, {
         onUpdate: 'RESTRICT',
         onDelete: 'RESTRICT',
         foreignKey: {
-          name: 'sellerId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'sellerId'
         }
       })
       this.Cart = User.hasMany(models.Cart, {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'buyerId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'buyerId'
         }
       })
     }
@@ -143,6 +135,10 @@ module.exports = (sequelize, DataTypes) => {
       gender: {
         type: DataTypes.STRING(1),
         allowNull: true
+      },
+      accountId: {
+        type: DataTypes.UUID,
+        allowNull: false
       }
     },
     {

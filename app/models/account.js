@@ -15,9 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'RESTRICT',
         onDelete: 'RESTRICT',
         foreignKey: {
-          name: 'accountId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'accountId'
         }
       })
     }

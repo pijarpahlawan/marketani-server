@@ -16,18 +16,14 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'transactionId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'transactionId'
         }
       })
       this.User = Transaction.belongsTo(models.User, {
         onUpdate: 'RESTRICT',
         onDelete: 'RESTRICT',
         foreignKey: {
-          name: 'buyerId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'buyerId'
         },
         as: 'buyer'
       })
@@ -48,6 +44,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       totalBill: {
         type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      buyerId: {
+        type: DataTypes.UUID,
         allowNull: false
       }
     },

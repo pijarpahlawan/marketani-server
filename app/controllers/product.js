@@ -26,7 +26,7 @@ const getAllProduct = async (req, res) => {
                 [Op.like]: `%${search}%`
               }
             },
-            include: 'seller'
+            include: ['seller']
           },
           { transaction: t }
         )
@@ -269,7 +269,7 @@ const deleteProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
-    const { productId } = req.params
+    const { productId } = req.query
 
     // delete product
     await sequelize.transaction(
@@ -294,8 +294,13 @@ const deleteProduct = async (req, res) => {
 
     return res.status(response.code).json(response)
   } catch (error) {
-    error.code = 500
-    error.status = 'Internal Server Error'
+    if (error instanceof ValidationError) {
+      error.code = 400
+      error.status = 'Bad Request'
+    } else {
+      error.code = 500
+      error.status = 'Internal Server Error'
+    }
 
     const response = {
       code: error.code,

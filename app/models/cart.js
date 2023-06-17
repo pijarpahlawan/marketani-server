@@ -12,9 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'buyerId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'buyerId'
         },
         as: 'buyer'
       })
@@ -22,9 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'productId',
-          type: DataTypes.UUID,
-          allowNull: false
+          name: 'productId'
         }
       })
     }
