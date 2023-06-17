@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
         foreignKey: {
-          name: 'userId',
+          name: 'buyerId',
           type: DataTypes.UUID,
           allowNull: false
         }

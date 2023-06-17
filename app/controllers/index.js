@@ -12,6 +12,7 @@ const {
   updateProduct,
   deleteProduct
 } = require('./product')
+const { getAllCart, createCart, updateCart, deleteCart } = require('./cart')
 
 module.exports = {
   province,
@@ -27,5 +28,9 @@ module.exports = {
   getSingleProduct,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getAllCart,
+  createCart,
+  updateCart,
+  deleteCart
 }

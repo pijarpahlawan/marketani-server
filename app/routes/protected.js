@@ -11,7 +11,11 @@ const {
   getSingleProduct,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getAllCart,
+  createCart,
+  updateCart,
+  deleteCart
 } = require('../controllers')
 
 const routes = express.Router()
@@ -35,6 +39,12 @@ routes.post('/product', createProduct)
 routes.get('/product', getAllProduct)
 routes.get('/product/:productId', getSingleProduct)
 routes.put('/product/:productId', updateProduct)
-routes.delete('/product/:productId', deleteProduct)
+routes.delete('/product', deleteProduct)
+
+// cart routes
+routes.get('/cart', getAllCart)
+routes.post('/cart', createCart)
+routes.put('/cart', updateCart)
+routes.delete('/cart', deleteCart)
 
 module.exports = routes
