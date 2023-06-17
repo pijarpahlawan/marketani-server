@@ -54,6 +54,7 @@ module.exports = {
       accountId: {
         type: Sequelize.UUID,
         allowNull: false,
+        unique: true,
         field: 'account_id'
       },
       createdAt: {

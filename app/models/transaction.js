@@ -42,7 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         values: ['jne', 'tiki', 'pos'],
         allowNull: false
       },
-      totalBill: {
+      courierCost: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      totalPrice: {
         type: DataTypes.INTEGER,
         allowNull: false
       },

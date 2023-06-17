@@ -31,7 +31,7 @@ const getAllCart = async (req, res) => {
       data: carts
     }
 
-    return res.status(200).json(response)
+    return res.status(response.code).json(response)
   } catch (error) {
     if (error instanceof ValidationError) {
       error.code = 404
@@ -64,7 +64,6 @@ const createCart = async (req, res) => {
 
   try {
     const { userId } = req.auth
-    console.log(userId)
     const { productId, quantity } = req.body
 
     // insert product to cart
@@ -79,6 +78,10 @@ const createCart = async (req, res) => {
           },
           { transaction: t }
         )
+
+        if (product.sellerId === userId) {
+          throw new ValidationError('You cannot buy your own product')
+        }
 
         if (product.stock < quantity) {
           throw new ValidationError('Product out of stock')
@@ -101,7 +104,7 @@ const createCart = async (req, res) => {
       message: 'Product added to cart successfully'
     }
 
-    return res.status(200).json(response)
+    return res.status(response.code).json(response)
   } catch (error) {
     if (error instanceof ValidationError) {
       error.code = 400
@@ -172,7 +175,7 @@ const updateCart = async (req, res) => {
       message: 'Cart updated successfully'
     }
 
-    return res.status(200).json(response)
+    return res.status(response.code).json(response)
   } catch (error) {
     if (error instanceof ValidationError) {
       error.code = 400
@@ -227,7 +230,7 @@ const deleteCart = async (req, res) => {
       message: 'Cart deleted successfully'
     }
 
-    return res.status(200).json(response)
+    return res.status(response.code).json(response)
   } catch (error) {
     if (error instanceof ValidationError) {
       error.code = 400
