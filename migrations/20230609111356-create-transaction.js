@@ -16,7 +16,12 @@ module.exports = {
         allowNull: false,
         field: 'courier_id'
       },
-      totalBill: {
+      courierCost: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        field: 'total_bill'
+      },
+      totalPrice: {
         type: Sequelize.INTEGER,
         allowNull: false,
         field: 'total_bill'

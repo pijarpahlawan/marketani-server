@@ -138,7 +138,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       accountId: {
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: false,
+        unique: true
       }
     },
     {

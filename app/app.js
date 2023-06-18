@@ -12,6 +12,8 @@ const app = express()
 app.set('query parser', (str) => qs.parse(str, { arrayLimit: 1000 }))
 
 // TODO: give environment variable to cors origin
+// TODO: Loging in sequelize, please turn off when in production
+// ! RETRIVE ONLY COLUMN NEEDED
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
