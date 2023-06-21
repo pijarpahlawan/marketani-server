@@ -24,7 +24,7 @@ module.exports = {
       totalPrice: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        field: 'total_bill'
+        field: 'total_price'
       },
       buyerId: {
         type: Sequelize.UUID,
