@@ -40,7 +40,7 @@ routes.get('/cost', cost)
 routes.post('/product', createProduct)
 routes.get('/product', getAllProduct)
 routes.get('/product/:productId', getSingleProduct)
-routes.put('/product/:productId', updateProduct)
+routes.put('/product', updateProduct)
 routes.delete('/product', deleteProduct)
 
 // cart routes

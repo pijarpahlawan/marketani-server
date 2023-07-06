@@ -199,11 +199,17 @@ const updateProduct = async (req, res) => {
   const sequelize = new Sequelize(dbConfig)
 
   try {
-    const { productId } = req.params
-    const { productName, description, weight, stock, price } = req.body
+    const { productId, productName, description, weight, stock, price } =
+      req.body
 
     // validate request body
-    const { error } = Product.validate(req.body)
+    const { error } = Product.validate({
+      productName,
+      description,
+      weight,
+      stock,
+      price
+    })
 
     if (error !== undefined) {
       throw new ValidationError(error.message)
