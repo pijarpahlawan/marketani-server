@@ -108,7 +108,7 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Username already exists'
         }
       },
-      avatarUrl: {
+      avatarName: {
         type: DataTypes.STRING,
         allowNull: true
       },
@@ -121,11 +121,11 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true
       },
       provinceId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(2),
         allowNull: true
       },
       cityId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING(4),
         allowNull: true
       },
       address: {

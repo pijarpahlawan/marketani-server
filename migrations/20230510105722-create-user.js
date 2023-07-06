@@ -16,10 +16,10 @@ module.exports = {
         unique: true,
         field: 'username'
       },
-      avatarUrl: {
+      avatarName: {
         type: Sequelize.STRING,
         allowNull: true,
-        field: 'avatar_url'
+        field: 'avatar_name'
       },
       name: {
         type: Sequelize.STRING(30),
@@ -32,12 +32,12 @@ module.exports = {
         field: 'phone'
       },
       provinceId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(2),
         allowNull: true,
         field: 'province_id'
       },
       cityId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(4),
         allowNull: true,
         field: 'city_id'
       },

@@ -7,7 +7,7 @@ const { rajaongkirAPIKEY } = require('../../config/thirdParty')
  * @param {*} res
  * @returns
  */
-const province = (req, res) => {
+const city = (req, res) => {
   return axios
     .get('https://api.rajaongkir.com/starter/city', {
       params: {
@@ -16,29 +16,29 @@ const province = (req, res) => {
       },
       headers: { key: rajaongkirAPIKEY }
     })
-    .then((res) => {
-      const parsedData = res.data
-      const response = {}
+    .then((response) => {
+      const parsedData = response.data
+      const body = {}
 
       if (parsedData.rajaongkir.status.code !== 200) {
-        response.code = parsedData.rajaongkir.status.code
-        response.status =
+        body.code = parsedData.rajaongkir.status.code
+        body.status =
           parsedData.rajaongkir.status.code < 500
             ? 'Client Error'
             : 'Server Error'
-        response.message = parsedData.rajaongkir.status.description
+        body.message = parsedData.rajaongkir.status.description
 
-        console.error(response)
-        return res.status(response.code).json(response)
+        console.error(body)
+        return res.status(body.code).json(body)
       }
 
-      response.code = 200
-      response.status = 'OK'
-      response.message = 'Success'
-      response.data = parsedData.rajaongkir.results
+      body.code = 200
+      body.status = 'OK'
+      body.message = 'Success'
+      body.data = parsedData.rajaongkir.results
 
-      return res.status(200).json(response)
+      return res.status(200).json(body)
     })
 }
 
-module.exports = province
+module.exports = city

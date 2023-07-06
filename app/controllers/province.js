@@ -8,32 +8,33 @@ const { rajaongkirAPIKEY } = require('../../config/thirdParty')
  * @returns
  */
 const province = async (req, res) => {
+  console.log(req.params)
   return axios
     .get('https://api.rajaongkir.com/starter/province', {
       params: { id: req.params.provinceId },
       headers: { key: rajaongkirAPIKEY }
     })
-    .then((res) => {
-      const parsedData = res.data
-      const response = {}
+    .then((response) => {
+      const parsedData = response.data
+      const body = {}
 
       if (parsedData.rajaongkir.status.code !== 200) {
-        response.code = parsedData.rajaongkir.status.code
-        response.status =
+        body.code = parsedData.rajaongkir.status.code
+        body.status =
           parsedData.rajaongkir.status.code < 500
             ? 'Client Error'
             : 'Server Error'
-        response.message = parsedData.rajaongkir.status.description
+        body.message = parsedData.rajaongkir.status.description
 
-        console.error(response)
-        return res.status(response.code).json(response)
+        console.error(body)
+        return res.status(body.code).json(body)
       }
 
-      response.code = 200
-      response.status = 'Ok'
-      response.data = parsedData.rajaongkir.results
+      body.code = 200
+      body.status = 'Ok'
+      body.data = parsedData.rajaongkir.results
 
-      return res.status(200).json(response)
+      return res.status(200).json(body)
     })
 }
 
