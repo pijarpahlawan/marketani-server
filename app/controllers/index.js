@@ -4,7 +4,12 @@ const province = require('./province')
 const register = require('./register')
 const login = require('./login')
 const logout = require('./logout')
-const { getProfile, updateProfile, updatePassword } = require('./profile')
+const {
+  getProfile,
+  updateProfile,
+  updatePassword,
+  updateAvatar
+} = require('./profile')
 const {
   getAllProduct,
   getSingleProduct,
@@ -24,6 +29,7 @@ module.exports = {
   getProfile,
   updateProfile,
   updatePassword,
+  updateAvatar,
   getAllProduct,
   getSingleProduct,
   createProduct,

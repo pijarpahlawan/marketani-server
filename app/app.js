@@ -6,6 +6,7 @@ const qs = require('qs')
 const publicRoutes = require('./routes/public')
 const protectedRoutes = require('./routes/protected')
 const { host, port } = require('../config/network')
+const fileUpload = require('express-fileupload')
 
 const app = express()
 
@@ -17,6 +18,14 @@ app.set('query parser', (str) => qs.parse(str, { arrayLimit: 1000 }))
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
 app.use(express.json())
 app.use(cookieParser())
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    safeFileNames: true,
+    preserveExtension: true,
+    tempFileDir: '/tmp/'
+  })
+)
 app.use((req, res, next) => {
   res.setHeader('Content-Type', 'application/json')
   next()

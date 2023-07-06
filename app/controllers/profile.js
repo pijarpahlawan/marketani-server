@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt')
 const { User, Account } = require('../models')
 const env = process.env.NODE_ENV || 'development'
 const dbConfig = require('../../config/database')[env]
+const { uploadAvatarPath } = require('../../config/fileUpload')
 
 /**
  * Get user profile
@@ -29,6 +30,10 @@ const getProfile = async (req, res) => {
       }
     )
 
+    if (Object.keys(user).length === 0) {
+      throw new ValidationError('User not found')
+    }
+
     const reponse = {
       code: 200,
       status: 'Ok',
@@ -37,11 +42,17 @@ const getProfile = async (req, res) => {
 
     return res.status(200).json(reponse)
   } catch (error) {
-    error.code = 500
+    if (error instanceof ValidationError) {
+      error.code = 404
+      error.status = 'Not Found'
+    } else {
+      error.code = 500
+      error.status = 'Internal Server Error'
+    }
 
     const response = {
       code: error.code,
-      status: 'Internal Server Error',
+      status: error.status,
       message: error.message
     }
 
@@ -234,4 +245,53 @@ const updatePassword = async (req, res) => {
     return res.status(response.code).json(response)
   }
 }
-module.exports = { getProfile, updateProfile, updatePassword }
+
+const updateAvatar = async (req, res) => {
+  const sequelize = new Sequelize(dbConfig)
+
+  try {
+    const uploadFile = req.files.avatar
+    const name = uploadFile.name
+    const md5 = uploadFile.md5
+    const saveAs = `${md5}_${name}`
+    const filePath = `${uploadAvatarPath}/${saveAs}`
+
+    await uploadFile.mv(filePath)
+
+    await sequelize.transaction(
+      { isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED },
+      async (t) => {
+        const { userId } = req.auth
+
+        await User.update(
+          {
+            avatarUrl: saveAs
+          },
+          { where: { userId } },
+          { transaction: t }
+        )
+      }
+    )
+
+    const response = {
+      code: 200,
+      status: 'Ok',
+      message: 'Avatar updated successfully'
+    }
+
+    return res.status(200).json(response)
+  } catch (error) {
+    error.code = 500
+    error.status = 'Internal Server Error'
+
+    const response = {
+      code: error.code,
+      status: error.status,
+      message: error.message
+    }
+
+    console.error(response)
+    return res.status(response.code).json(response)
+  }
+}
+module.exports = { getProfile, updateProfile, updatePassword, updateAvatar }

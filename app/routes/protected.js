@@ -15,7 +15,8 @@ const {
   getAllCart,
   createCart,
   updateCart,
-  deleteCart
+  deleteCart,
+  updateAvatar
 } = require('../controllers')
 
 const routes = express.Router()
@@ -26,12 +27,12 @@ routes.get('/logout', logout)
 routes.get('/profile', getProfile)
 routes.put('/profile', updateProfile)
 routes.post('/profile/password', updatePassword)
+routes.post('/profile/avatar', updateAvatar)
 
 // third party routes
 routes.get('/province', province)
-routes.get('/province/:provinceId', province)
 routes.get('/province/:provinceId/city', city)
-routes.get('/province/:provinceId/city/:cityId', city)
+routes.get('/province/city', city)
 routes.get('/cost', cost)
 
 // product routes
