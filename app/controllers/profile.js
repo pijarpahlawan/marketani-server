@@ -26,7 +26,15 @@ const getProfile = async (req, res) => {
     const user = await sequelize.transaction(
       { isolationLevel: Transaction.ISOLATION_LEVELS.READ_UNCOMMITTED },
       async (t) => {
-        return await User.findByPk(userId, { transaction: t, include: Account })
+        return await User.findByPk(userId, {
+          transaction: t,
+          include: [
+            {
+              model: Account,
+              attributes: ['email']
+            }
+          ]
+        })
       }
     )
 
